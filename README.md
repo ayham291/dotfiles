@@ -1,4 +1,4 @@
-#Ayham Alhalaibi <https://ayhamcloud.de>'s dotfiles)
+# Ayham Alhalaibi <https://ayhamcloud.de>'s dotfiles)
 
 These are the dotfiles deployed by [LARBS](https://github.com/ayham291/LARBS) and as seen on
 [Luke Smith's YouTube channel](https://youtube.com/c/lukesmithxyz).
