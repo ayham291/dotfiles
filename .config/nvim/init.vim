@@ -42,6 +42,8 @@ Plug 'junegunn/goyo.vim'
 Plug 'ap/vim-css-color'
 Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/AutoComplPop'
+Plug 'junegunn/fzf'
+Plug 'haya14busa/incsearch.vim'
 
 call plug#end()
 
