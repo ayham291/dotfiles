@@ -1,0 +1,3 @@
+#!/bin/sh
+
+optimus-manager --status | awk '/mode :/ {print $5}'
