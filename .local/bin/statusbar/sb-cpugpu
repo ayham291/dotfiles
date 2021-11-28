@@ -3,4 +3,4 @@
 CPU=$(sensors | awk '/CPU/ {print $2}' | sed 's/+//' | sed 's/C$//')
 GPU=$(sensors | awk '/GPU/ {print $2}' | sed 's/+//' | sed 's/C$//')
 
-echo "CPU/GPU:$CPU/$GPU"
+echo "🔥CPU/GPU:$CPU/$GPU"

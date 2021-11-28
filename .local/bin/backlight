@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# echo $1 > /sys/class/backlight/intel_backlight/brightness
+
+BACKLIGHT=$(cat /sys/class/backlight/intel_backlight/brightness)
+# echo "$BACKLIGHT"
+# echo $(($2+BACKLIGHT))
+
+
+[[ $2 -gt $BACKLIGHT ]] || [[ $(($2+BACKLIGHT)) -gt 1500 ]] && echo "ERRORR" && exit
+
+case $1 in
+    +) echo $((BACKLIGHT+$2)) > /sys/class/backlight/intel_backlight/brightness  ;;
+    mx) echo 1500 > /sys/class/backlight/intel_backlight/brightness  ;;
+    p) echo 500 > /sys/class/backlight/intel_backlight/brightness  ;;
+esac

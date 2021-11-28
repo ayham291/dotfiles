@@ -11,3 +11,5 @@ killall xcape 2>/dev/null ; xcape -e 'Super_L=Escape'
 xmodmap -e 'keycode 135 = Super_R'
 # Turn off the caps lock if on since there is no longer a key for it.
 xset -q | grep "Caps Lock:\s*on" && xdotool key Caps_Lock
+# Turn on the num lock
+xset -q | grep "Num Lock:\s*off" && xdotool key Num_Lock

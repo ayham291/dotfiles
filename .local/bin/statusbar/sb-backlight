@@ -1,0 +1,6 @@
+#!/bin/sh
+
+CURR_VAL=$(cat /sys/class/backlight/intel_backlight/brightness)
+PERCENT=$((100*CURR_VAL/1500))
+
+echo "🌞"$PERCENT"%"

@@ -9,6 +9,7 @@ endif
 
 
 set title
+set path+=**
 set bg=dark
 set go=a
 set mouse=a
@@ -51,6 +52,7 @@ Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'junegunn/fzf'
 Plug 'haya14busa/incsearch.vim'
+Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -166,6 +168,7 @@ nnoremap <leader>h :call ToggleHiddenAll()<CR>
 
 colorscheme gruvbox
 highlight Normal     ctermbg=NONE guibg=NONE
+highlight Comment    ctermbg=Black cterm=italic,bold guibg=NONE
 
 " This is new style
 " call deoplete#custom#var('omni', 'input_patterns', {
