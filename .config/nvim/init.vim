@@ -1,5 +1,12 @@
 let mapleader=","
-filetype plugin indent on
+
+if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
+	echo "Downloading junegunn/vim-plug to manage plugins..."
+	silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
+	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
+	autocmd VimEnter * PlugInstall
+endif
+
 
 set title
 set path+=**
@@ -7,7 +14,7 @@ set bg=dark
 set go=a
 set mouse=a
 set nohlsearch
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 set noshowmode
 set noruler
 set laststatus=0
@@ -53,6 +60,7 @@ call plug#end()
 " Some basics:
 	nnoremap c "_c
 	set nocompatible
+	filetype plugin on
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
@@ -62,8 +70,11 @@ call plug#end()
 " Disables automatic commenting on newline:
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
+" Perform dot commands over visual blocks:
+	vnoremap . :normal .<CR>
+
 " Compile document, be it groff/LaTeX/markdown/etc.
-	map <leader>x :w! \| !compiler "<c-r>%"<CR><CR>
+	map <leader>c :w! \| !compiler "<c-r>%"<CR>
 
 " Open corresponding .pdf/.html or preview
 	map <C-p> :!opout <c-r>%<CR><CR>
@@ -74,6 +85,8 @@ call plug#end()
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 	autocmd VimLeave *.tex !texclear %
 
+" Check file in shellcheck:
+	map <leader>s :!clear && shellcheck -x %<CR>
 
     map <leader><F7> :set spell!<CR>
 
@@ -106,6 +119,7 @@ call plug#end()
 
 " Enable Goyo by default for mutt writing
 	autocmd BufRead,BufNewFile /tmp/neomutt* let g:goyo_width=80
+	autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo | set bg=light
 	autocmd BufRead,BufNewFile /tmp/neomutt* map ZZ :Goyo\|x!<CR>
 	autocmd BufRead,BufNewFile /tmp/neomutt* map ZQ :Goyo\|q!<CR>
 
@@ -117,6 +131,14 @@ call plug#end()
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritePre * %s/\n\+\%$//e
 	autocmd BufWritePre *.[ch] %s/\%$/\r/e
+
+" When shortcut files are updated, renew bash and ranger configs with new material:
+	autocmd BufWritePost bm-files,bm-dirs !shortcuts
+" Run xrdb whenever Xdefaults or Xresources are updated.
+	autocmd BufRead,BufNewFile Xresources,Xdefaults,xresources,xdefaults set filetype=xdefaults
+	autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
+" Recompile dwmblocks on config edit.
+	autocmd BufWritePost ~/.local/src/dwmblocks/config.h !cd ~/.local/src/dwmblocks/; sudo make install && { killall -q dwmblocks;setsid -f dwmblocks }
 
 " Turns off highlighting on the bits of code that are changed, so the line that is changed is highlighted but the actual text that has changed stands out on the line and is readable.
 if &diff
@@ -140,7 +162,7 @@ function! ToggleHiddenAll()
         set showcmd
     endif
 endfunction
-nnoremap <C-h> :call ToggleHiddenAll()<CR>
+nnoremap <leader>h :call ToggleHiddenAll()<CR>
 
 
 
