@@ -27,9 +27,7 @@ textype() { \
 }
 
 maintex() { \
-    [[ $base == "main" ]] && textype "$base"
-    textype "$dir/main.tex"
-
+    cd $dir && [[ -f "main.tex" ]] && textype "$dir/main.tex" || textype "$file"
 }
 
 case "$ext" in
