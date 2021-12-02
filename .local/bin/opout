@@ -5,7 +5,8 @@
 # running from vim.
 
 basename="${1%.*}"
-[[ -f main.pdf ]] && basename="main" && echo $basename
+
+[[ -f "main.tex" ]] && basename="main" && echo $basename
 
 case "${*}" in
 	*.tex|*.m[dse]|*.[rR]md|*.mom|*.[0-9]) setsid -f xdg-open "$basename".pdf >/dev/null 2>&1 ;;
