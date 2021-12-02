@@ -4,7 +4,7 @@
 Xcursor.size: 28
 
 !! Set a default font and font size as below:
-*.font: monospace:size=15
+*.font: monospace:size=13
 
 /* name		dark	light */
 /* black	0	8 */
@@ -16,7 +16,7 @@ Xcursor.size: 28
 /* cyan		6	14 */
 /* white	7	15 */
 
-/* !! gruvbox: */
+!! gruvbox:
 /* *.color0: #1d2021 */
 /* *.color1: #cc241d */
 /* *.color2: #98971a */
