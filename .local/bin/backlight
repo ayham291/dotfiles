@@ -7,7 +7,7 @@ BACKLIGHT=$(cat /sys/class/backlight/intel_backlight/brightness)
 # echo $(($2+BACKLIGHT))
 
 
-[[ $2 -gt $BACKLIGHT ]] || [[ $(($2+BACKLIGHT)) -gt 1500 ]] && echo "ERRORR" && exit
+[[ $2 -gt $BACKLIGHT ]] || ( [[ $(($2+BACKLIGHT)) -gt 1500 ]] && echo "ERRORR" && exit )
 
 case $1 in
     +) echo $((BACKLIGHT+$2)) > /sys/class/backlight/intel_backlight/brightness  ;;

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+case $BLOCK_BUTTON in
+    4) backlight + 10 ;;
+    5) backlight + -10 ;;
+esac
+
 CURR_VAL=$(cat /sys/class/backlight/intel_backlight/brightness)
 PERCENT=$((100*CURR_VAL/1500))
 
