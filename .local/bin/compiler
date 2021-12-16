@@ -22,12 +22,12 @@ textype() { \
 	$command --output-directory="$dir" "$1" &&
 	grep -qi addbibresource "$file" &&
 	biber --input-directory "$dir" "$1" &&
-	$command --output-directory="$dir" "$1" &&
 	$command --output-directory="$dir" "$1"
+    exit 0
 }
 
 maintex() { \
-    cd $dir && [[ -f "main.tex" ]] && textype "$dir/main.tex" || textype "$file"
+    ( [[ -f "main.tex" ]] && textype "$dir/main.tex" && exit 0 ) || ( textype "$1" && exit 0 )
 }
 
 case "$ext" in
