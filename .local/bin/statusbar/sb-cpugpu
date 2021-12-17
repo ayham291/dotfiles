@@ -2,5 +2,15 @@
 
 CPU=$(sensors | awk '/CPU/ {print $2}' | sed 's/+//' | sed 's/C$//')
 GPU=$(sensors | awk '/GPU/ {print $2}' | sed 's/+//' | sed 's/C$//')
+NUMLOCK=$(xset q | awk '/Num Lock/ {print $8}')
 
-echo "🔥CPU/GPU:$CPU/$GPU"
+case $NUMLOCK in
+    on)
+        icon='🔒'
+        ;;
+    off)
+        icon='👐'
+        ;;
+esac
+
+echo "🔥CPU/GPU:$CPU/$GPU $icon"
