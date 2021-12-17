@@ -13,4 +13,5 @@ case $1 in
     +) echo $((BACKLIGHT+$2)) > /sys/class/backlight/intel_backlight/brightness  ;;
     mx) echo 1500 > /sys/class/backlight/intel_backlight/brightness  ;;
     p) echo 500 > /sys/class/backlight/intel_backlight/brightness  ;;
+    v) echo $2 > /sys/class/backlight/intel_backlight/brightness  ;;
 esac
