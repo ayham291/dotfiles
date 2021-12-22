@@ -13,4 +13,4 @@ case $NUMLOCK in
         ;;
 esac
 
-echo "🔥CPU/GPU:$CPU/$GPU $icon"
+echo "🔥C:$CPU/G:$GPU $icon"
