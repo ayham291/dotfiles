@@ -3,7 +3,10 @@
 # Prints all batteries, their percentage remaining and an emoji corresponding
 # to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
 
+curr=$(sensors | awk '/curr/ {print $2$3}' | sed 's/\.00//' | tail -n 1)
+
 case $BLOCK_BUTTON in
+    1) notify-send "Amps" " $curr" ;;
 	3) notify-send "🔋 Battery module" "🔋: discharging
 🛑: not charging
 ♻: stagnant charge
@@ -35,5 +38,5 @@ for battery in /sys/class/power_supply/BAT?*; do
 	[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗" && backlight v 150 && notify-send -t 0 "Low Battery ⚠️" "Battery is low! Backlight is set to 10%"
 	# Prints the info
 	printf "%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
-    printf "%s" " ⚡$curr"
+
 done && printf "\\n"

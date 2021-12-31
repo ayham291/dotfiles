@@ -13,4 +13,9 @@ case $NUMLOCK in
         ;;
 esac
 
+case $BLOCK_BUTTON in
+    1) notify-send "GPU mode" "$(sb-gpumode)" ;;
+esac
+
+
 echo "🔥C:$CPU/G:$GPU $icon"
