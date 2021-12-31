@@ -30,6 +30,18 @@ maintex() { \
     ( [[ -f "main.tex" ]] && textype "$dir/main.tex" && exit 0 ) || ( textype "$1" && exit 0 )
 }
 
+pandoc_cr() {
+    command="basic"
+    ( head "$1" -n5 | grep -qi 'studienarbeit' ) && command="studienarbeit"
+    case "$command" in
+        basic)
+            echo "basic" && pandoc -V geometry:a4paper,margin=2.3cm --highlight-style=kate -s -o "$base".pdf "$file" ;;
+        studienarbeit)
+            echo "studienarbeit" && pandoc "$1" --filter pandoc-crossref --citeproc --template=templates/oth_template.tex -o "$base".pdf --listings ;;
+    esac
+}
+
+
 case "$ext" in
 	# Try to keep these cases in alphabetical order.
 	[0-9]) preconv "$file" | refer -PS -e | groff -mandoc -T pdf > "$base".pdf ;;
@@ -39,8 +51,9 @@ case "$ext" in
 	go) go run "$file" ;;
 	h) sudo make install ;;
 	java) javac -d classes "$file" && java -cp classes "${1%.*}" ;;
+    js) node "$file" ;;
 	m) octave "$file" ;;
-	md)	pandoc -V geometry:a4paper,margin=2.3cm --highlight-style=kate -s -o "$base".pdf "$file" ;;
+	md) pandoc_cr $file;;
 	mom) preconv "$file" | refer -PS -e | groff -mom -kept -T pdf > "$base".pdf ;;
 	ms) preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf > "$base".pdf ;;
 	org) emacs "$file" --batch -u "$USER" -f org-latex-export-to-pdf ;;
