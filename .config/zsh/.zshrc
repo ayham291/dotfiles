@@ -8,9 +8,9 @@ precmd() { vcs_info }
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
 # Format the vcs_info_msg_0_ variable
-zstyle ':vcs_info:git:*' formats " %{$fg[cyan]%}(%b)"
+zstyle ':vcs_info:git:*' formats " %F{165}ϟ%bϟ"
 setopt PROMPT_SUBST
-PS1='%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~${vcs_info_msg_0_}%{$fg[red]%}] %{$fg[blue]%}>%{$fg[magenta]%}>%{$fg[yellow]%}>%{$reset_color%} '
+PS1='%B%F{9}[%F{69}%n%F{11}Σ%F{250}%M %F{11}%~${vcs_info_msg_0_}%F{9}] $[HISTCMD] %F{138}>%{$reset_color%} '
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -84,3 +84,5 @@ bindkey '^e' edit-command-line
 # Load syntax highlighting; should be last.
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 export GPG_TTY=$(tty)
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
