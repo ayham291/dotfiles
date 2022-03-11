@@ -1,6 +1,6 @@
 [global]
     monitor = 0
-    follow = keyboard
+    follow = mouse
     width = 370
     height = 350
     offset = 0x25
