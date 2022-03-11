@@ -36,23 +36,28 @@ set colorcolumn=100
 set cursorline
 set cursorcolumn
 set complete+=kspell
-set completeopt=menuone,longest
+set completeopt=noselect,menuone
 set shortmess+=c
 call plug#begin('~/.vim/plugged')
 
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'gruvbox-community/gruvbox'
-Plug 'prettier/vim-prettier'
+Plug 'prettier/vim-prettier', { 'do': 'npm install --frozen-lockfile --production' }
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-latex/vim-latex'
+Plug 'sbdchd/neoformat'
 Plug 'junegunn/goyo.vim'
 Plug 'ap/vim-css-color'
 Plug 'tpope/vim-commentary'
-Plug 'vim-scripts/AutoComplPop'
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': './install' }
 Plug 'haya14busa/incsearch.vim'
 Plug 'github/copilot.vim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'lervag/vimtex'
+Plug 'mxw/vim-jsx'
 
 call plug#end()
 
@@ -61,11 +66,21 @@ call plug#end()
 	nnoremap c "_c
 	set nocompatible
 	filetype plugin on
-	syntax on
+	syntax enable
+    let g:tex_flavor = 'latex'
 	set encoding=utf-8
 	set number relativenumber
 " Enable autocompletion:
-	" set wildmode=longest,list,full
+    set wildmode=longest,list,full
+    set wildmenu
+    " Ignore files
+    set wildignore+=*.pyc
+    set wildignore+=*_build/*
+    set wildignore+=**/coverage/*
+    set wildignore+=**/node_modules/*
+    set wildignore+=**/android/*
+    set wildignore+=**/ios/*
+    set wildignore+=**/.git/*
 
 " Disables automatic commenting on newline:
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -78,6 +93,7 @@ call plug#end()
 
 " Open corresponding .pdf/.html or preview
 	map <C-p> :!opout <c-r>%<CR><CR>
+    map <C-n> :Neoformat<CR>
 
     vnoremap <C-c> "+y
     vnoremap <C-f> "+p
@@ -89,6 +105,8 @@ call plug#end()
 	map <leader>s :!clear && shellcheck -x %<CR>
 
     map <leader><F7> :set spell!<CR>
+
+    map <leader>f :FZF<CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>v<C-w>h
@@ -102,10 +120,16 @@ call plug#end()
     map <C-q> <C-w>q
 
     nmap <leader><leader> <C-j>
-    imap ;; <F5>
+    imap ;ae ä
+    imap ;ue ü
+    imap ;oe ö
+    imap ;ss ß
+    imap ;Ae Ä
+    imap ;Ue Ü
+    imap ;Oe Ö
 
-    nnoremap ;g :Goyo 100<CR>
-    nnoremap ;G :Goyo!<CR>
+    " nnoremap ;g :Goyo 100<CR>
+    " nnoremap ;G :Goyo!<CR>
 
     let g:Tex_Folding=0
 
@@ -120,10 +144,12 @@ call plug#end()
 " Save file as sudo on files that require root permission
 	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
-" Automatically deletes all trailing whitespace and newlines at end of file on save.
+" Automatically deletes all trailing whitespace and newlines at end of file on save. & reset cursor position
+ 	autocmd BufWritePre * let currPos = getpos(".")
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritePre * %s/\n\+\%$//e
 	autocmd BufWritePre *.[ch] %s/\%$/\r/e
+    autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 " When shortcut files are updated, renew bash and ranger configs with new material:
 	autocmd BufWritePost bm-files,bm-dirs !shortcuts
@@ -176,3 +202,97 @@ endfunction
 
 
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+lua require('telescope').setup{defaults={file_sorte = require('telescope.sorters').get_fzy_sorter}}
+nnoremap <leader>ps :lua require('telescope.builtin').grep_string({search = vim.fn.input('Search: ')})<CR>
+nnoremap <leader>pf :lua require('telescope.builtin').find_files()<CR>
+nnoremap <C-g> :lua require('telescope.builtin').git_files()<CR>
+nnoremap <leader>pb :lua require('telescope.builtin').buffers()<CR>
+nnoremap <leader>pt :lua require('telescope.builtin').grep_string({search = vim.fn.expand('<cword>')})<CR>
+nnoremap <leader>vh :lua require('telescope.builtin').help_tags()<CR>
+
+
+
+let g:copilot_filetypes = {
+      \ 'markdown': v:true,
+      \ }
+
+let g:neoformat_tex_latexindent = {
+            \ 'exe': 'latexindent',
+            \ 'args': ['-w'],
+            \ 'replace': 1,
+            \ 'no_append': 0,
+            \ }
+let g:neoformat_try_node_exe = 1
+" let g:neoformat_enabled_tex = ['latexindent', 'prettier']
+let g:neoformat_enabled = ['latexindent', 'prettier']
+let g:prettier#config#tab_width = 2
+let g:neoformat_basic_format_tab_width = 2
+let g:neoformat_basic_format_indent_size = 2
+let g:neoformat_basic_format_use_tabs = 0
+
+" let g:neoformat_verbose = 1 " only affects the verbosity of Neoformat
+" lua require('ja')
+
+" This is the default extra key bindings
+" let g:fzf_action = {
+"   \ 'ctrl-t': 'tab split',
+"   \ 'ctrl-x': 'split',
+"   \ 'ctrl-v': 'vsplit' }
+
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - Popup window (center of the screen)
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+" - Popup window (center of the current window)
+" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
+
+" - Popup window (anchored to the bottom of the current window)
+" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+" - down / up / left / right
+" let g:fzf_layout = { 'down': '40%' }
+
+" - Window using a Vim command
+" let g:fzf_layout = { 'window': 'enew' }
+" let g:fzf_layout = { 'window': '-tabnew' }
+" let g:fzf_layout = { 'window': '10new' }
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Enable per-command history
+" - History files will be stored in the specified directory
+" - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
+"   'previous-history' instead of 'down' and 'up'.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+autocmd FileType tex let b:coc_pairs = [["$", "$<++>"], ["{", "}<++>"], ["[", "]<++>"], ["(", ")<++>"]]
+
+runtime macros/matchit.vim
