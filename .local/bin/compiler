@@ -19,10 +19,10 @@ cd "$dir" || exit 1
 textype() { \
 	command="pdflatex"
 	( head -n5 "$1" | grep -qi 'xelatex' ) && command="xelatex"
-	$command --output-directory="$dir" "$1" &&
+	$command -shell-escape --output-directory="$dir" "$1" &&
 	grep -qi addbibresource "$file" &&
-	biber --input-directory "$dir" "$1" &&
-	$command --output-directory="$dir" "$1"
+	biber --input-directory "$dir" "$base" &&
+	$command -shell-escape --output-directory="$dir" "$1"
     exit 0
 }
 
