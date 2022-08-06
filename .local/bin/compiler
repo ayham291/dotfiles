@@ -32,12 +32,15 @@ maintex() { \
 
 pandoc_cr() {
     command="basic"
+    [ -f "makefile" ] && command="make"
     ( head "$1" -n5 | grep -qi 'studienarbeit' ) && command="studienarbeit"
     case "$command" in
-        basic)
-            echo "basic" && pandoc -V geometry:a4paper,margin=2.3cm --highlight-style=kate -s -o "$base".pdf "$file" ;;
+        make)
+            echo "using make" && make -C "$dir" ;;
         studienarbeit)
             echo "studienarbeit" && pandoc "$1" --filter pandoc-crossref --citeproc --template=templates/oth_template.tex -o "$base".pdf --listings ;;
+        basic)
+            echo "basic" && pandoc --wrap=preserve -V geometry:a4paper,margin=2.3cm --highlight-style=kate -s -o "$base".pdf "$file" ;;
     esac
 }
 
