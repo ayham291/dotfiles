@@ -15,9 +15,9 @@ pricefile="$dir/$1-$currency"
 chartfile="$dir/$1-$currency-chart"
 
 updateprice() { temp="$(mktemp)"
-	curl -s "$currency.rate.sx/1$1" > "$temp" &&
+	curl  "$currency.rate.sx/1$1" > "$temp" &&
 		mv -f "$temp" "$pricefile" &&
-		curl -s "$currency.rate.sx/$1$interval" > "$temp" &&
+		curl  "$currency.rate.sx/$1$interval" > "$temp" &&
 		mv -f "$temp" "$chartfile" ;}
 
 [ -d "$dir" ] || mkdir -p "$dir"

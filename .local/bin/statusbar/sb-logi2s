@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mx2s=$(solaar show | awk '/Battery/ {print $2}' | head -n1 | sed 's/,//')
+
+echo "🐁 $mx2s"

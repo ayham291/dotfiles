@@ -1,0 +1,36 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+    2) playerctl previous ;;
+    1) playerctl play-pause ;;
+    3) playerctl next ;;
+esac
+
+if ps -C spotifyd > /dev/null; then
+    PLAYER="spotifyd"
+  elif playerctl -l | grep -q "spotify"; then
+    PLAYER="spotify"
+fi
+
+if [ "$PLAYER" = "spotifyd" ] || [ "$PLAYER" = "spotify" ] ; then
+    # ARTIST=$(playerctl metadata artist)
+    ARTIST=$(playerctl -p "$PLAYER" metadata artist | awk '{print $1" "$2}' | sed 's/,//')
+    TRACK=$(playerctl -p "$PLAYER" metadata title)
+    STATUS=$(playerctl -p "$PLAYER" status)
+    SHUFFLE=$(playerctl -p "$PLAYER" shuffle)
+
+    if [ "$STATUS" = "Playing" ]; then
+        STATUS="▶"
+    else
+        STATUS="⏸"
+    fi
+
+    if [ "$SHUFFLE" = "On" ]; then
+        SHUFFLE=" 🔀"
+    else
+        SHUFFLE=""
+    fi
+
+    printf "%s %s| %s" "$STATUS" "$ARTIST" "$TRACK"
+    printf "%s" "$SHUFFLE"
+fi
