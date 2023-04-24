@@ -1,4 +1,4 @@
-vim.g.mapleader = ","
+vim.g.mapleader = " "
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
@@ -24,7 +24,7 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 10
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
@@ -42,3 +42,4 @@ vim.o.wrap = false
 vim.o.cursorline = true
 vim.o.cursorcolumn = true
 
+vim.api.nvim_set_keymap("c", "w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!", { noremap = true, silent = true })
