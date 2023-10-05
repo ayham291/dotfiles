@@ -30,7 +30,7 @@ lsp.setup_nvim_cmp({
 })
 
 lsp.on_attach(function(client, bufnr)
-    lsp.buffer_autoformat()
+    -- lsp.buffer_autoformat()
     local opts = { buffer = bufnr, remap = false }
 
     vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
@@ -47,6 +47,14 @@ end)
 
 lsp.setup()
 
+-- LSP for C/C++
+require('lspconfig').clangd.setup({
+    cmd = { 'clangd', '--background-index', '--compile-commands-dir=.' },
+    filetypes = { 'c' },
+    root_dir = require('lspconfig.util').root_pattern('.clangd', 'compile_commands.json'),
+})
+
+--
 -- VHDL LSP
 require('lspconfig.configs').vhdl = {
     default_config = {
