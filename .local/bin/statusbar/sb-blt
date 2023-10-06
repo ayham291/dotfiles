@@ -1,19 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
 
 blt_poewr=$(bluetoothctl show | awk '/Powered:/ {print $2}')
-blt_dev=$(bluetoothctl info | awk '/Connected:/ {print $2}')
-headset_mac=$(bluetoothctl info | awk '/Device/ {print $2}')
-headset_not_connected_mac=$(bluetoothctl devices | awk '/Device/ {print $2}')
-headset_name=$(bluetoothctl devices | awk '/Device/' | sed 's/Device \([[:alnum:]]\{2\}[:-]\)\{5\}\([[:alnum:]]\{2\}\) //')
+headset_mac="F8:8F:07:37:70:D7"
+connected_devices=$(bluetoothctl devices Connected | awk '/Device/ {print $2}')
+connected_devices_names=$(bluetoothctl devices Connected | awk '/Device/' | sed 's/Device \([[:alnum:]]\{2\}[:-]\)\{5\}\([[:alnum:]]\{2\}\) //')
 
-[[ $headset_mac == "F8:8F:07:37:70:D7" ]] && headset_connected=1 && headset_icon="🎧"
+# check mac adress in bluetoothctl devices
+[[ $connected_devices == *"$headset_mac"* ]] && headset_connected=1 && headset_icon="🎧"
+[[ $connected_devices == *"DC:2C:26:39:CD:2C"* ]] && keyboard_icon="⌨️"
 
 
 case $BLOCK_BUTTON in
-    1) ([[ $headset_connected == 1 ]] && notify-send "🔊Devices" "$headset_name") || notify-send "No devices connected";;
+    1) notify-send "🔊Devices" "$connected_devices_names" || notify-send "No devices connected";;
     2) ([[ $blt_poewr == "yes" ]] && bluetoothctl power off) || bluetoothctl power on;;
-    3) ([[ $blt_dev == "yes" ]] && bluetoothctl disconnect "$headset_mac") || bluetoothctl connect "$headset_not_connected_mac";;
+    3) ([[ $headset_connected == 1 ]] && bluetoothctl disconnect "$headset_mac") || bluetoothctl connect "$headset_mac";;
 esac
 
 case $blt_poewr in
@@ -26,4 +27,4 @@ case $blt_poewr in
         ;;
 esac
 
-echo "$headset_icon$icon"
+echo "$keyboard_icon$headset_icon$icon"
