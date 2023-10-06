@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/env bash
 
 # This script will compile or run another finishing operation on a document. I
 # have this script run via vim.
@@ -10,24 +10,41 @@
 # string "xelatex" somewhere in a comment/command in the first 5 lines.
 
 file=$(readlink -f "$1")
-dir=${file%/*}
+dir="$2"
 base="${file%.*}"
 ext="${file##*.}"
 
 cd "$dir" || exit 1
 
+bibfile() { \
+    BIBER="biber --input-directory $dir $base"
+    echo "bibfile: $1"
+    case "$dir/$1" in
+        *main.tex) if grep -qi addbibresource "$file"; then
+            $BIBER && echo "biber"
+        else
+            bibtex main && echo "bibtex"
+        fi ;;
+    esac
+}
+
 textype() { \
+    echo "textype: $1"
 	command="pdflatex"
 	( head -n5 "$1" | grep -qi 'xelatex' ) && command="xelatex"
 	$command -shell-escape --output-directory="$dir" "$1" &&
-	grep -qi addbibresource "$file" &&
-	biber --input-directory "$dir" "$base" &&
-	$command -shell-escape --output-directory="$dir" "$1"
+    bibfile "$1" &&
+	$command -shell-escape --output-directory="$dir" "$1" &&
     exit 0
 }
 
 maintex() { \
-    ( [[ -f "main.tex" ]] && textype "$dir/main.tex" && exit 0 ) || ( textype "$1" && exit 0 )
+    if [[ -f "main.tex" ]] ; then
+        file="main.tex"
+        textype "$file"
+    else
+        textype "$1"
+    fi
 }
 
 pandoc_cr() {

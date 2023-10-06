@@ -1,15 +1,21 @@
-#!/bin/sh
+#!/bin/zsh
 
 # opout: "open output": A general handler for opening a file's intended output,
 # usually the pdf of a compiled document.  I find this useful especially
 # running from vim.
 
 basename="${1%.*}"
+dir="$2"
 
-[[ -f "main.tex" ]] && basename="main" && echo $basename
+echo "dir: $dir"
 
-case "${*}" in
-	*.tex|*.m[dse]|*.[rR]md|*.mom|*.[0-9]) setsid -f xdg-open "$basename".pdf >/dev/null 2>&1 ;;
+cd "$dir" || exit 1
+
+[[ -f "main.tex" ]] && basename="main" && 
+    setsid -f zathura "$basename".pdf && echo "basename": $basename && exit 0
+
+case "$1" in
+    *.tex) setsid -f zathura "$basename".pdf && echo "HELLO";;
 	*.html) setsid -f "$BROWSER" "$basename".html >/dev/null 2>&1 ;;
 	*.sent) setsid -f sent "$1" >/dev/null 2>&1 ;;
 esac
