@@ -1,15 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 
 CURR_VAL=$(cat /sys/class/backlight/intel_backlight/brightness)
-PERCENT=$((100*CURR_VAL/1500))
+PERCENT=$((100*CURR_VAL/$(cat /sys/class/backlight/intel_backlight/max_brightness)))
+STEP=$(( "$(cat /sys/class/backlight/intel_backlight/max_brightness)" * 5 / 100 ))
+
+[[ ! -f /tmp/brightness ]] && echo "$CURR_VAL" > /tmp/brightness
 
 case $BLOCK_BUTTON in
     1) notify-send "Brightness" "$CURR_VAL = $PERCENT%" ;;
     2) ( [[ "$CURR_VAL" -gt 0 ]] && echo "$CURR_VAL" > /tmp/brightness && backlight v 0 )\
-        || ( [[ "$CURR_VAL" == 0 ]] && backlight v $(cat /tmp/brightness) );;
-    4) backlight + 10 ;;
+        || ( [[ "$CURR_VAL" == 0 ]] && backlight v "$(cat /tmp/brightness)" );;
+    4) backlight + "$STEP" ;;
     3) backlight mx ;;
-    5) backlight + -10 ;;
+    5) backlight + -"$STEP" ;;
 esac
 
 echo "🌞$PERCENT%"

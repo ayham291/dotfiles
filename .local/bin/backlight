@@ -1,17 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
 # echo $1 > /sys/class/backlight/intel_backlight/brightness
 
 BACKLIGHT=$(cat /sys/class/backlight/intel_backlight/brightness)
+MAX=$(cat /sys/class/backlight/intel_backlight/max_brightness)
 # echo "$BACKLIGHT"
 # echo $(($2+BACKLIGHT))
 
 
-[[ $2 -gt $BACKLIGHT ]] || ( [[ $(($2+BACKLIGHT)) -gt 1500 ]] && echo "ERRORR" && exit )
+[[ "$2" -gt "$BACKLIGHT" ]] || ( [[ $(($2+BACKLIGHT)) -gt "$MAX" ]] && echo "ERRORR" && exit )
+# make previous line POSIX compliant add quotes to $2 and remove [[ ]]
+
 
 case $1 in
     +) echo $((BACKLIGHT+$2)) > /sys/class/backlight/intel_backlight/brightness  ;;
-    mx) echo 1500 > /sys/class/backlight/intel_backlight/brightness  ;;
-    p) echo 500 > /sys/class/backlight/intel_backlight/brightness  ;;
-    v) echo $2 > /sys/class/backlight/intel_backlight/brightness  ;;
+    mx) echo "$MAX" > /sys/class/backlight/intel_backlight/brightness  ;;
+    p) echo "$((MAX*31/100))" > /sys/class/backlight/intel_backlight/brightness  ;;
+    v) echo "$2" > /sys/class/backlight/intel_backlight/brightness  ;;
 esac
