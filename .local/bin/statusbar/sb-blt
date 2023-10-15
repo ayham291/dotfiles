@@ -2,7 +2,8 @@
 
 
 blt_poewr=$(bluetoothctl show | awk '/Powered:/ {print $2}')
-headset_mac="F8:8F:07:37:70:D7"
+# headset_mac="F8:8F:07:37:70:D7"
+headset_mac=$(bluetoothctl devices | awk '/WH-1000XM4/ {print $2}')
 connected_devices=$(bluetoothctl devices Connected | awk '/Device/ {print $2}')
 connected_devices_names=$(bluetoothctl devices Connected | awk '/Device/' | sed 's/Device \([[:alnum:]]\{2\}[:-]\)\{5\}\([[:alnum:]]\{2\}\) //')
 
