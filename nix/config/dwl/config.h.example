@@ -1,0 +1,12 @@
+/* Example notes for porting your dwm config.h to dwl.
+ *
+ * Copy upstream config.def.h to config.h in this directory, then:
+ *   - MODKEY stays Mod4 / Mod1 as you prefer
+ *   - TERMCMD / terminal spawn: { "foot", NULL } instead of st
+ *   - menu spawn: bemenu or wmenu instead of dmenu
+ *   - tags / rules / layouts port almost 1:1 from dwm
+ *   - replace X11-only hooks (xsetroot, etc.) with dwl/wlroots equivalents
+ *
+ * Point nix/pkgs/dwl.nix at the real file:
+ *   configH = ./../config/dwl/config.h;
+ */

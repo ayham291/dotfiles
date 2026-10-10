@@ -44,6 +44,13 @@ curl -LO https://raw.githubusercontent.com/ayham291/LARBS/master/larbs.sh
 or clone the repo files directly to your home directory and install the
 [dependencies](https://github.com/ayham291/LARBS/blob/master/progs.csv).
 
+## NixOS + Wayland (in progress)
+
+Moving off Arch/X11/dwm toward **NixOS + dwl** (dwm for Wayland) with a
+patched suckless-style build. See **[docs/NIX-WAYLAND.md](docs/NIX-WAYLAND.md)**
+for what changes, the component map, and the flake under [`nix/`](nix/) /
+[`flake.nix`](flake.nix).
+
 ## Default Desktop Artwork
 
 Thomas Thiemeyer's *The Road to Samarkand* ([fb](https://www.facebook.com/t.thiemeyer/), [insta](https://www.instagram.com/tthiemeyer/), [shop](https://www.redbubble.com/de/people/TThiemeyer/shop))
